@@ -1,0 +1,39 @@
+definitions:
+  v1.ResBody:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      massage:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /api/v1/register:
+    post:
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      - description: CreatedBy
+        in: query
+        name: created_by
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 用户注册
+swagger: "2.0"
