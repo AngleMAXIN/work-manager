@@ -1,24 +1,22 @@
 package e
 
+// MsgFlags 返回题消息提示内容
 var MsgFlags = map[int]string{
-	SUCCESS:                        "ok",
-	INVALID_PARAMS:                 "请求参数错误",
-	ERROR:                          "系统错误",
-	ERROR_EXIST_USER:               "该用户已注册",
-	ERROR_NOT_EXIST_USER:           "用户不存在",
-	ERROR_USER_PASSWORD:            "密码错误",
-	ERROR_AUTH_CHECK_TOKEN_FAIL:    "Token鉴权失败",
-	ERROR_AUTH_CHECK_TOKEN_TIMEOUT: "Token已超时",
-	ERROR_AUTH_TOKEN:               "Token生成失败",
-	ERROR_AUTH:                     "Token错误",
+	SUCCESS:              "ok",
+	INVALID_PARAMS:       "请求参数错误",
+	ERROR:                "系统错误",
+	ERROR_EXIST_USER:     "该用户已注册",
+	ERROR_NOT_EXIST_USER: "用户不存在",
+	ERROR_USER_PASSWORD:  "密码错误",
+	ERROR_FILE_TOO_BIG:   "文件大小不得超过8M",
 }
 
+// GetMsg 获取消息信息体
 func GetMsg(code int) string {
 	msg, ok := MsgFlags[code]
 	if ok {
 		return msg
 	}
-
 	return MsgFlags[ERROR]
 }
 

@@ -19,3 +19,9 @@ func TestMakePassword(t *testing.T) {
 	}
 
 }
+
+func TestRandStringBytesMaskImprSrc(t *testing.T) {
+	n := 33
+	res := RandStringBytesMaskImprSrc(n)
+	t.Log(res)
+}

@@ -25,6 +25,7 @@ create table wm_work (
     title varchar(25) default "" not null,
     upload_time datetime null,
     creator_id int default 0 not null,
+    homework_id int default 0 not null,
     comment varchar(50) default "" not null,
     score tinyint unsigned default 0 not null,
     grade_id int default 0 not null

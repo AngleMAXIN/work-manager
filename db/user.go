@@ -12,19 +12,19 @@ const (
 						(user_id, real_name, u_type, password, level, major, grade_id, create_time) 
 					values (?,?,?,?,?,?,?,?);`
 	//getUserStr 获取用户
-	getUserStr = `select password from wm_user where user_id = ? limit 1;`
+	getUserStr = `select id, password, grade_id, real_name, u_type from wm_user where user_id = ? limit 1;`
 	//getGradeStr 获取某一个班级
 	getGradeStr       = `select grade_id from wm_grade where level = ? and major = ?;`
 	checkUserExistStr = `select count(1) from wm_user where user_id = ? limit 1;`
 )
 
 // GetUser 获取单个用户
-func GetUser(account uint) (string, error) {
-	savePassword := ""
-	if err := dbConn.QueryRow(getUserStr, account).Scan(&savePassword); err != nil {
-		return savePassword, err
+func GetUser(account uint) (*common.UserBody, error) {
+	u := &common.UserBody{}
+	if err := dbConn.QueryRow(getUserStr, account).Scan(&u.UserID, &u.PassWord, &u.GradeID, &u.RealName, &u.UType); err != nil {
+		return nil, err
 	}
-	return savePassword, nil
+	return u, nil
 }
 
 // CreateUser 创建用户
