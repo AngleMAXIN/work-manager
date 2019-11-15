@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 	"work-manager/pkg/common"
 )
@@ -31,14 +32,58 @@ const (
 
 	// createCommentStr 老师评价作业
 	createCommentStr = `update wm_work set comment = ? ,score = ? where id = ?;`
+
+	// deleteWorklistStr 删除有关的所有已提交的作业
+	deleteWorklistStr = `delete from wm_work where homework_id = ?;`
+
+	// deleteHomeWorkStr 删除布置的作业
+	deleteHomeWorkStr = `delete from wm_homework where id = ?;`
 )
 
-// CreateOneHomeWork 老师创建作业
-func CreateOneHomeWork(title string, realName string, creatorID int, endTime time.Time, startTime time.Time, gradeID int) (bool, error) {
+// DeleteHomeWork 删除布置的作业
+func DeleteHomeWork(homeWorkID int) (bool, error) {
 	var (
 		err  error
 		stmt *sql.Stmt
 	)
+	if stmt, err = dbConn.Prepare(deleteWorklistStr); err != nil {
+		return false, err
+	}
+	defer stmt.Close()
+
+	if _, err = stmt.Exec(homeWorkID); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// DeleteListHomeWork 删除已提交的作业
+func DeleteListHomeWork(homeWorkID int) (bool, error) {
+	var (
+		err  error
+		stmt *sql.Stmt
+	)
+	if stmt, err = dbConn.Prepare(deleteWorklistStr); err != nil {
+		return false, err
+	}
+	defer stmt.Close()
+
+	if _, err = stmt.Exec(homeWorkID); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// CreateOneHomeWork 老师创建作业
+func CreateOneHomeWork(title, realName string, creatorID, gradeID int, endTime, startTime time.Time) (bool, error) {
+	var (
+		err  error
+		stmt *sql.Stmt
+	)
+	if startTime.After(endTime) {
+		e := "start time must before end time."
+		return false, errors.New(e)
+	}
 	if stmt, err = dbConn.Prepare(createHomoWork); err != nil {
 		return false, err
 	}

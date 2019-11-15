@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"work-manager/db"
@@ -29,7 +30,6 @@ func GetWorkList(c *gin.Context) {
 		goto end
 	}
 	if res, err = db.GetWorkList(limit, offset); err != nil {
-		fmt.Println("------------", err)
 		code = e.ERROR
 		goto end
 	}
@@ -130,7 +130,12 @@ func PostHomeWork(c *gin.Context) {
 		goto end
 	} else {
 		filename := filepath.Base(f.Filename)
-		if err = c.SaveUploadedFile(f, common.WorkFileDir+filename); err != nil {
+		workDir := fmt.Sprintf("%s%d", common.WorkBaseDir, pwb.HomeworkID)
+		// 判断文件夹是否存在
+		// 不存在就创建，存在就直接把文件写进去
+		err := os.Mkdir(workDir, os.ModePerm)
+
+		if err = c.SaveUploadedFile(f, workDir+filename); err != nil {
 			fmt.Println(err)
 			code = e.ERROR
 			goto end

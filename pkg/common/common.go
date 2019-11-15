@@ -3,8 +3,8 @@ package common
 import "time"
 
 const (
-	// WorkFileDir 作业存储路径
-	WorkFileDir = "./workFiles/"
+	// WorkBaseDir 作业存储路径
+	WorkBaseDir = "./workFiles/"
 )
 
 // RegisterBody 注册请求体
