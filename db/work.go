@@ -16,10 +16,10 @@ const (
 	// getHomeWorkOfGrade 获取某一个班的已提交的作业
 	getWorkOfGrade = `select 
 						   id, creator, title, creator_id, comment, score, upload_time, grade_id from wm_work 
-					  where homework_id = ? and grade_id = ? limit ? offset ?;`
+					  where homework_id = ? limit ? offset ?;`
 
 	// getCountWStr 获取某一个班的已提交的作业数量
-	getCountWStr = `select count(*) from wm_work where grade_id = ? and homework_id = ?;`
+	getCountWStr = `select count(*) from wm_work where homework_id = ?;`
 
 	// getHomeworkListStr 获取所有布置的作业
 	getHomeworkListStr = `select * from wm_homework limit ? offset ?;`
@@ -28,51 +28,54 @@ const (
 	getCountHwStr = `select count(*) from wm_homework;`
 
 	// createOneWork 创建一个作业
-	createOneWork = `insert into wm_work (creator, title, upload_time, creator_id, grade_id, homework_id) values (?,?,?,?,?,?);`
+	createOneWork = `insert into wm_work (creator, title, upload_time, creator_id, grade_id, homework_id) values (?,?,?,?,?,?) on duplicate key update title=values(title);`
 
 	// createCommentStr 老师评价作业
 	createCommentStr = `update wm_work set comment = ? ,score = ? where id = ?;`
 
 	// deleteWorklistStr 删除有关的所有已提交的作业
-	deleteWorklistStr = `delete from wm_work where homework_id = ?;`
+	// deleteWorklistStr = `delete from wm_work where homework_id = ?;`
 
 	// deleteHomeWorkStr 删除布置的作业
-	deleteHomeWorkStr = `delete from wm_homework where id = ?;`
+	// deleteHomeWorkStr = `delete from wm_homework where id = ?;`
+
+	// deleteOneWorkStr 删除某一个提交过的作业记录
+	deleteOneWorkStr = `delete from wm_work where id = ?;`
 )
 
-// DeleteHomeWork 删除布置的作业
-func DeleteHomeWork(homeWorkID int) (bool, error) {
+// DeleteWork 删除提交的作业
+func DeleteWork(workID string) (bool, error) {
 	var (
 		err  error
 		stmt *sql.Stmt
 	)
-	if stmt, err = dbConn.Prepare(deleteWorklistStr); err != nil {
+	if stmt, err = dbConn.Prepare(deleteOneWorkStr); err != nil {
 		return false, err
 	}
 	defer stmt.Close()
 
-	if _, err = stmt.Exec(homeWorkID); err != nil {
+	if _, err = stmt.Exec(workID); err != nil {
 		return false, err
 	}
 	return true, nil
 }
 
 // DeleteListHomeWork 删除已提交的作业
-func DeleteListHomeWork(homeWorkID int) (bool, error) {
-	var (
-		err  error
-		stmt *sql.Stmt
-	)
-	if stmt, err = dbConn.Prepare(deleteWorklistStr); err != nil {
-		return false, err
-	}
-	defer stmt.Close()
+// func DeleteListHomeWork(homeWorkID int) (bool, error) {
+// 	var (
+// 		err  error
+// 		stmt *sql.Stmt
+// 	)
+// 	if stmt, err = dbConn.Prepare(deleteWorklistStr); err != nil {
+// 		return false, err
+// 	}
+// 	defer stmt.Close()
 
-	if _, err = stmt.Exec(homeWorkID); err != nil {
-		return false, err
-	}
-	return true, nil
-}
+// 	if _, err = stmt.Exec(homeWorkID); err != nil {
+// 		return false, err
+// 	}
+// 	return true, nil
+// }
 
 // CreateOneHomeWork 老师创建作业
 func CreateOneHomeWork(title, realName string, creatorID, gradeID int, endTime, startTime time.Time) (bool, error) {
@@ -101,7 +104,8 @@ func CreateOneWork(pwb *common.PostWorkBody) (bool, error) {
 		err  error
 		stmt *sql.Stmt
 	)
-
+	// 存在就更新，
+	// 不存在就创建
 	if stmt, err = dbConn.Prepare(createOneWork); err != nil {
 		return false, err
 	}
@@ -115,13 +119,13 @@ func CreateOneWork(pwb *common.PostWorkBody) (bool, error) {
 }
 
 // GetGradeWorkList 获取某一个专业的作业列表
-func GetGradeWorkList(limit, offset int, gradeID, homeworkID string) (*common.WorkList, error) {
-	rows, err := dbConn.Query(getWorkOfGrade, homeworkID, gradeID, limit, offset)
+func GetGradeWorkList(limit, offset int, homeworkID string) (*common.WorkList, error) {
+	rows, err := dbConn.Query(getWorkOfGrade, homeworkID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
 	count := 0
-	if err = dbConn.QueryRow(getCountWStr, gradeID, homeworkID).Scan(&count); err != nil {
+	if err = dbConn.QueryRow(getCountWStr, homeworkID).Scan(&count); err != nil {
 		return nil, err
 	}
 	if limit >= count {

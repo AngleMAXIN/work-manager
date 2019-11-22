@@ -34,26 +34,29 @@ type UserBody struct {
 
 // PostWorkBody 学生创建作业
 type PostWorkBody struct {
-	CreatorID  int    `json:"creator_id" binding:"required"`
-	GradeID    int    `json:"grade_id" binding:"required"`
+	CreatorID  int    `json:"creator_id"`
+	GradeID    int    `json:"grade_id"`
 	HomeworkID int    `json:"homework_id" binding:"required"`
-	Creator    string `json:"creator" binding:"required"`
+	Creator    string `json:"creator"`
 	Title      string `json:"title" binding:"required"`
 }
 
-// PostHomeWorkBody 老师创建作业
-type PostHomeWorkBody struct {
-	BelongClass int    `json:"belong_class,omitempty"`
-	CreatorID   int    `json:"creator_id,omitempty"`
-	Title       string `json:"title,omitempty"`
-	Creator     string `json:"creator,omitempty"`
+// CreateHomeWorkBody 老师创建作业
+type CreateHomeWorkBody struct {
+	CreatorID int       `json:"creator_id"`
+	Level     uint16    `json:"level" binding:"required"`
+	Major     string    `json:"major" binding:"required"`
+	Title     string    `json:"title" binding:"required"`
+	Creator   string    `json:"creator"`
+	StartTime time.Time `json:"start_time" binding:"required"`
+	EndTime   time.Time `json:"end_time" binding:"required"`
 }
 
 // PutCommentBody 批改作业
 type PutCommentBody struct {
-	Comment string `json:"comment,omitempty"`
 	Score   int    `json:"score,omitempty"`
 	WorkID  int    `json:"work_id,omitempty"`
+	Comment string `json:"comment,omitempty"`
 }
 
 // HomeWork 老师布置的作业
@@ -91,4 +94,11 @@ type OneWork struct {
 type WorkList struct {
 	Count int
 	Works []*OneWork
+}
+
+// GradeInfo 班级信息
+type GradeInfo struct {
+	Value    string       `json:"value,omitempty"`
+	Label    string       `json:"label,omitempty"`
+	Children []*GradeInfo `json:"children,omitempty"`
 }

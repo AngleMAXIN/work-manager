@@ -1,0 +1,28 @@
+[
+    {
+        Value: "2016",
+        Label: "1",
+        Children: [
+            {
+                Value: "软件工程",
+                Label: "1"
+            },
+            {
+                Value: "计算机科学与技术",
+                Label: "2"
+            },
+            {
+                Value: "英语",
+                Label: "3"
+            },
+            {
+                Value: "信息技术与科学",
+                Label: "4"
+            },
+            {
+                Value: "物联网",
+                Label: "5"
+            }
+        ]
+    }
+]

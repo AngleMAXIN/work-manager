@@ -28,7 +28,8 @@ create table wm_work (
     homework_id int default 0 not null,
     comment varchar(50) default "" not null,
     score tinyint unsigned default 0 not null,
-    grade_id int default 0 not null
+    grade_id int default 0 not null,
+    constraint `wm_creator_homework_un` unique (`creator_id`, `homework_id`)
 );
                                                                                                                                                                                                    
 drop table if exists wm_homework;

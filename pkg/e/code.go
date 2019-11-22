@@ -2,11 +2,12 @@ package e
 
 const (
 	SUCCESS              = 200
+	NOT_LOGIN            = 301
 	ERROR                = 500
 	ERROR_EXIST_USER     = 10001
 	INVALID_PARAMS       = 10002
 	ERROR_NOT_EXIST_USER = 10004
 	ERROR_USER_PASSWORD  = 10003
 	ERROR_NOT_EXIST_TAG  = 10005
-	ERROR_FILE_TOO_BIG   = 10006
+	ERROR_FILE           = 10006
 )

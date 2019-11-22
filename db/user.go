@@ -14,7 +14,7 @@ const (
 	//getUserStr 获取用户
 	getUserStr = `select id, password, grade_id, real_name, u_type from wm_user where user_id = ? limit 1;`
 	//getGradeStr 获取某一个班级
-	getGradeStr       = `select grade_id from wm_grade where level = ? and major = ?;`
+	getGradeStr       = `select id from wm_grade where level = ? and major = ?;`
 	checkUserExistStr = `select count(1) from wm_user where user_id = ? limit 1;`
 )
 

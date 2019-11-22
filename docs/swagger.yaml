@@ -12,6 +12,142 @@ info:
   contact: {}
   license: {}
 paths:
+  /api/v1/comment-work:
+    post:
+      parameters:
+      - description: 评语
+        in: body
+        name: comment
+        required: true
+        schema:
+          type: string
+      - description: 分数
+        in: body
+        name: score
+        required: true
+        schema:
+          type: integer
+      - description: 某一个学生的作业id
+        in: body
+        name: work_id
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":nil,"msg":"ok"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "301":
+          description: '{"code":10001,"data":nil,"msg":"用户未登录"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "400":
+          description: '{"code":400,"data":nil,"msg":"请求参数错误"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "500":
+          description: '{"code":500,"data":nil,"msg":"系统错误"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 批改作业
+  /api/v1/create-homework:
+    post:
+      parameters:
+      - description: 年级
+        in: body
+        name: level
+        required: true
+        schema:
+          type: integer
+      - description: 专业
+        in: body
+        name: major
+        required: true
+        schema:
+          type: string
+      - description: 布置作业的标题
+        in: body
+        name: title
+        required: true
+        schema:
+          type: string
+      - description: 开始时间
+        in: body
+        name: start_time
+        required: true
+        schema:
+          $ref: '#/definitions/time'
+          type: object
+      - description: 结束时间
+        in: body
+        name: end_time
+        required: true
+        schema:
+          $ref: '#/definitions/time'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code":200,"data":nil,"msg":"ok"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "301":
+          description: code":10001,"data":nil,"msg":"用户未登录"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "400":
+          description: code":400,"data":nil,"msg":"请求参数错误"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "500":
+          description: code":500,"data":nil,"msg":"系统错误"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 教师发布作业
+  /api/v1/garde-info:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code":200,"data":{"value":"2016","label":"1","children":[{"value":"软件工程","label":"1"},{"value":"计算机科学与技术","label":"2"},{"value":"英语","label":"3"},{"value":"信息技术与科学","label":"4"},{"value":"物联网","label":"5"}]},"msg":"ok"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 获取班级信息，信息是死的，数据库里的班级也是死的
+  /api/v1/grade-homework:
+    get:
+      parameters:
+      - description: 跳过的数量
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: 一页返回的数量
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: "布置的作业id\t"
+        in: query
+        name: homework_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code":200,"data":{"Count":2,"Works":[{"work_id":1,"creator_id":0,"score":0,"grade_id":0,"homework_id":0,"creator":"","title":"方案","comment":"","upload_time":"2019-11-21T11:21:29+08:00"}]},"massage":"ok"}
+            ResBody
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "500":
+          description: code":500,"data":null,"massage":"系统错误"}
+          schema:
+            $ref: '#/definitions/v1.ResBody'
   /api/v1/homework:
     get:
       parameters:
@@ -29,7 +165,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{"count":1,"homeworks":[{"homework_id":1,"belong_class":1,"creator_id":33,"title":"软件工程第一次测试1","creator":"牛莉","create_time":"2019-11-10T13:54:12+08:00","start_time":"2019-11-10T13:54:12+08:00","end_time":"2019-11-10T13:54:12+08:00"},null]},"massage":"ok"}'
+          description: code":200,"data":{"count":1,"homeworks":[{"homework_id":1,"belong_class":1,"creator_id":33,"title":"软件工程第一次测试1","creator":"牛莉","create_time":"2019-11-10T13:54:12+08:00","start_time":"2019-11-10T13:54:12+08:00","end_time":"2019-11-10T13:54:12+08:00"},null]},"massage":"ok"}
           schema:
             $ref: '#/definitions/v1.ResBody'
       summary: 教师端或是学生端获取作业列表
@@ -55,15 +191,60 @@ paths:
           description: '{"code":200,"data":nil,"msg":"ok"}'
           schema:
             $ref: '#/definitions/v1.ResBody'
-        "10002":
-          description: '{"code":10002,"data":nil,"msg":"用户不存在"}'
-          schema:
-            $ref: '#/definitions/v1.ResBody'
         "10003":
           description: '{"code":10003,"data":nil,"msg":"密码错误"}'
           schema:
             $ref: '#/definitions/v1.ResBody'
+        "10004":
+          description: '{"code":10002,"data":nil,"msg":"用户不存在"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
       summary: 用户登录
+  /api/v1/logout:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":nil,"msg":"ok"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 登出,清除cookie
+  /api/v1/post-work:
+    post:
+      parameters:
+      - description: 布置的作业id
+        in: body
+        name: homework_id
+        required: true
+        schema:
+          type: integer
+      - description: 作业文件标题
+        in: body
+        name: title
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/x-www-form-urlencoded
+      responses:
+        "200":
+          description: '{"code":200,"data":nil,"msg":"ok"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "301":
+          description: '{"code":10001,"data":nil,"msg":"用户未登录"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "500":
+          description: '{"code":500,"data":nil,"msg":"系统错误"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+        "10006":
+          description: '{"code":400,"data":nil,"msg":"文件错误"}'
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 提交作业
   /api/v1/register:
     post:
       parameters:
@@ -123,4 +304,27 @@ paths:
           schema:
             $ref: '#/definitions/v1.ResBody'
       summary: 用户注册
+  /api/v1/workfile:
+    get:
+      parameters:
+      - description: 布置的作业id
+        in: body
+        name: homework_id
+        required: true
+        schema:
+          type: integer
+      - description: 作业文件标题
+        in: body
+        name: file_name
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.ResBody'
+      summary: 获取文件
 swagger: "2.0"
