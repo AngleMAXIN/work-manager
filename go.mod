@@ -15,9 +15,10 @@ require (
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
+	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.3
-	github.com/ugorji/go v1.1.7 // indirect
+	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20191107222254-f4817d981bb6
 	golang.org/x/net v0.0.0-20191108063844-7e6e90b9ea88 // indirect
 	golang.org/x/sys v0.0.0-20191105231009-c1f44814a5cd // indirect

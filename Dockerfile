@@ -2,7 +2,7 @@ FROM golang:1.12
 
 # set env
 ENV GO111MODULE=on
-ENV GOPROXY=https://goproxy.io
+ENV GOPROXY=https://goproxy.io,direct
 
 WORKDIR /app
 
